@@ -46,6 +46,9 @@ public class Clock : MonoBehaviour
 #if UNITY_EDITOR
     public void OnValidate()
     {
+        hour = (hour + hoursInDay) % hoursInDay;
+        minute = (minute + minutesInHour) % minutesInHour;
+        second = (second + secondsInMinute) % secondsInMinute;
         SetTime(hour, minute, second);
     }
 #endif
