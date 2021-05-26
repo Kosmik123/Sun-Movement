@@ -11,11 +11,17 @@ public class Clock : MonoBehaviour
     public float timeSpeed = 1;
 
     [Header("States")]
-    public int hour;
-    public int minute;
-    public int second;
+    private int _hour;
+    private int _minute;
+    private int _second;
 
     private float time;
+
+    public int hour { get { return _hour; } set { _hour = value;} }
+    public int minute { get { return _minute; } set { _minute = value; } }
+    public int second { get { return _second; } set { _second = value; Refresh(); } }
+
+
 
     private void Update()
     {
@@ -23,19 +29,32 @@ public class Clock : MonoBehaviour
         Refresh();
     }
 
-    private void Refresh()
+    private void Refresh()   
     {
-        second = Mathf.FloorToInt(time) % secondsInMinute;
-        minute = Mathf.FloorToInt(time / secondsInMinute) % minutesInHour;
-        hour = Mathf.FloorToInt(time / (minutesInHour * secondsInMinute)) % hoursInDay;
-    }
+        while (_second < 0)
+        {
+            _second += secondsInMinute;
+            _minute--;
+        }
+        while (_second >= secondsInMinute)
+        {
+            _second -= secondsInMinute;
+            _minute++;
+        }
 
-    public void SetTime(int hours, int minutes = 0, int seconds = 0)
-    {
-        hours = (hours + hoursInDay) % hoursInDay;
-        minutes = (minutes + minutesInHour) % minutesInHour;
-        seconds = (seconds + secondsInMinute) % secondsInMinute;
-        time = (hours * minutesInHour + minutes) * secondsInMinute + seconds;
+        while (_minute < 0)
+        {
+            _minute += minutesInHour;
+            _hour--;
+        }
+        while (_minute >= minutesInHour)
+        {
+            _minute -= minutesInHour;
+            _hour++;
+        }
+
+        _hour = (_hour + hoursInDay) % hoursInDay;
+        time = (_hour * minutesInHour + _minute) * secondsInMinute + _second;
     }
 
     public float GetTime()
@@ -44,13 +63,6 @@ public class Clock : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    public void OnValidate()
-    {
-        hour = (hour + hoursInDay) % hoursInDay;
-        minute = (minute + minutesInHour) % minutesInHour;
-        second = (second + secondsInMinute) % secondsInMinute;
-        SetTime(hour, minute, second);
-    }
 
     [CustomEditor(typeof(Clock))]
     public class ClockEditor : Editor
