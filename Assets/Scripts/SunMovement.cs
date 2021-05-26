@@ -41,10 +41,16 @@ public class SunMovement : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    private void OnValidate()
+
+    public void Validate()
     {
         time = clock.GetTime();
         CalculateRotation();
+    }
+
+    private void OnValidate()
+    {
+        Validate();
     }
 #endif
 }

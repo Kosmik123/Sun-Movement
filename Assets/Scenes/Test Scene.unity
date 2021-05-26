@@ -38,13 +38,13 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44505477, g: 0.49464715, b: 0.57374513, a: 1}
+  m_IndirectSpecularColor: {r: 0.44427583, g: 0.49372816, b: 0.57309914, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -206,7 +206,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: -0.50892353, y: 0.15722162, z: 0.12659124, w: -0.8368112}
+  m_LocalRotation: {x: -0.65029097, y: 0.27770796, z: 0.41687396, w: -0.57115334}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -226,9 +226,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clock: {fileID: 705507997}
-  latitude: 50
-  axialTilt: 23.4
-  month: 5
+  latitude: 0
+  axialTilt: 13
+  month: 3
 --- !u!114 &705507997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,9 +242,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeSpeed: 1
-  hour: 10
-  minute: 30
-  second: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

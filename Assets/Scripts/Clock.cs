@@ -17,9 +17,9 @@ public class Clock : MonoBehaviour
 
     private float time;
 
-    public int hour { get { return _hour; } set { _hour = value;} }
+    public int hour { get { return _hour; } set { _hour = value; } }
     public int minute { get { return _minute; } set { _minute = value; } }
-    public int second { get { return _second; } set { _second = value; Refresh(); } }
+    public int second { get { return _second; } set { _second = value; ResetTime(); } }
 
 
 
@@ -29,7 +29,14 @@ public class Clock : MonoBehaviour
         Refresh();
     }
 
-    private void Refresh()   
+    private void Refresh()
+    {
+        _hour = (int)(time / (secondsInMinute * minutesInHour)) % hoursInDay;
+        _minute = (int)(time / secondsInMinute) % minutesInHour;
+        _second = (int)time % secondsInMinute;
+    }
+
+    private void ResetTime()
     {
         while (_second < 0)
         {
@@ -73,7 +80,7 @@ public class Clock : MonoBehaviour
         {
             clock = target as Clock;
 
-            EditorGUILayout.LabelField("Time", EditorStyles.boldLabel);      
+            EditorGUILayout.LabelField("Time", EditorStyles.boldLabel);
             GUILayout.BeginHorizontal();
             EditorGUIUtility.labelWidth = 12;
             clock.hour = EditorGUILayout.IntField((clock.hour + hoursInDay) % hoursInDay);
@@ -84,7 +91,20 @@ public class Clock : MonoBehaviour
             EditorGUIUtility.labelWidth = 0;
             EditorGUILayout.LabelField("Properties", EditorStyles.boldLabel);
             clock.timeSpeed = EditorGUILayout.FloatField("Time Speed", clock.timeSpeed);
+
+
+
+            UpdateSun();
+        
         }
+        void UpdateSun()
+        {
+            SunMovement sunMovement = clock.GetComponent<SunMovement>();
+            if (sunMovement != null)
+                sunMovement.Validate();
+        }
+
+
     }
 
 #endif
