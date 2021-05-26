@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
 public class Clock : MonoBehaviour
 {
@@ -50,5 +51,29 @@ public class Clock : MonoBehaviour
         second = (second + secondsInMinute) % secondsInMinute;
         SetTime(hour, minute, second);
     }
+
+    [CustomEditor(typeof(Clock))]
+    public class ClockEditor : Editor
+    {
+        Clock clock;
+
+        public override void OnInspectorGUI()
+        {
+            clock = target as Clock;
+
+            EditorGUILayout.LabelField("Time", EditorStyles.boldLabel);      
+            GUILayout.BeginHorizontal();
+            EditorGUIUtility.labelWidth = 12;
+            clock.hour = EditorGUILayout.IntField((clock.hour + hoursInDay) % hoursInDay);
+            clock.minute = EditorGUILayout.IntField(":", (clock.minute + minutesInHour) % minutesInHour);
+            clock.second = EditorGUILayout.IntField(":", (clock.second + secondsInMinute) % secondsInMinute);
+            GUILayout.EndHorizontal();
+
+            EditorGUIUtility.labelWidth = 0;
+            EditorGUILayout.LabelField("Properties", EditorStyles.boldLabel);
+            clock.timeSpeed = EditorGUILayout.FloatField("Time Speed", clock.timeSpeed);
+        }
+    }
+
 #endif
 }
