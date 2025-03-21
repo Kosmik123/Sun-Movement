@@ -211,7 +211,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.6988356, y: -0.008047623, z: 0.008246573, w: -0.7151895}
+  m_LocalRotation: {x: -0.6778195, y: -0.4313832, z: -0.21339343, w: -0.5558171}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -231,7 +231,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planetSettings: {fileID: 11400000, guid: 47b96e3ec30acf24b9a5e9b726c5be04, type: 2}
-  clock: {fileID: 705507997}
+  clock:
+    yearProgress: 0.919
+    dayProgress: 0.654
   latitude: 1.4
 --- !u!114 &705507997
 MonoBehaviour:
@@ -242,13 +244,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 705507993}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb0256a0e22a12a408dbe24eed7c8497, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f3c34b3ae511f143a265c4dd5dbea81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   timeSpeed: 1
   timeSettings: {fileID: 11400000, guid: b5d85bcc84cd33c4793acadc32964e72, type: 2}
-  yearProgress: 0.259
-  dayProgress: 0.5
+  sunMovement: {fileID: 705507996}
+  rawSeconds: 43200
+  dayCount: 1
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
