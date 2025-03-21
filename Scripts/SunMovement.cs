@@ -42,14 +42,12 @@ namespace RealisticSunMovement
 			polesAxis = Quaternion.AngleAxis(-latitude, Vector3.right) * Vector3.forward;
 			orbitAxis = Quaternion.AngleAxis(sunHeightAtNoon, Vector3.right) * Vector3.up;
 
-			float yearAngle = clock.YearProgress * FullAngle - 180;
-
 			float dayAngle = FullAngle * clock.DayProgress + 180;
 
-			transform.rotation =
-				Quaternion.AngleAxis(dayAngle - yearAngle, polesAxis) *
-				Quaternion.AngleAxis(yearAngle, orbitAxis) *
-				Quaternion.AngleAxis(sunHeightAtNoon, Vector3.right);
+			var sunRotationRelativeToDayTime = Quaternion.AngleAxis(dayAngle, polesAxis);
+			var sunRotationAtNoon = Quaternion.AngleAxis(sunHeightAtNoon, Vector3.right);
+
+			transform.rotation = sunRotationRelativeToDayTime * sunRotationAtNoon;
 		}
 
 		private static float GetTiltAmountFromYearProgress(float yearProgress) => -Mathf.Cos(yearProgress * 2 * Mathf.PI);

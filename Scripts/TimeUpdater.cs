@@ -55,6 +55,9 @@ namespace RealisticSunMovement
 
 		private void ValidateRawValues()
 		{
+			if (timeSettings == null)
+				return;
+
 			float daysInYear = timeSettings.DaysInYear;
 			float secondsInDay = timeSettings.SecondsInDay;
 			if (rawSeconds >= secondsInDay || rawSeconds < 0)
