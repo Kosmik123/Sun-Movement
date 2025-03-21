@@ -1,30 +1,56 @@
-﻿using UnityEditor;
-using UnityEngine;
-
+﻿using UnityEngine;
 
 namespace RealisticSunMovement
 {
-    public class Clock : MonoBehaviour
-    {
-        public static int HoursInDay = 24;
-        public static int MinutesInHour = 60;
-        public static int SecondsInMinute = 60;
+	[CreateAssetMenu(menuName = "Realistic Sun Movement/Time Settings")]
+	public class TimeSettings : ScriptableObject
+	{
+		[field: SerializeField]
+		public float SecondsInMinute { get; set; } = 60;
 
+		[field: SerializeField]
+		public float MinutesInHour { get; set; } = 60;
+
+		[field: SerializeField]
+		public float HoursInDay { get; set; } = 24;
+	}
+
+	public class Clock : MonoBehaviour
+    {
         [Header("Settings")]
         public float timeSpeed = 1;
 
+        [SerializeField]
+        private TimeSettings timeSettings;
+
         [Header("States")]
-        private int _hour;
-        private int _minute;
-        private int _second;
+        private float hour;
+        private float minute;
+        private float seconds;
 
         private float time;
 
-        public int hour { get { return _hour; } set { _hour = value; } }
-        public int minute { get { return _minute; } set { _minute = value; } }
-        public int second { get { return _second; } set { _second = value; ResetTime(); } }
+        public float Hour
+		{
+			get => hour;
+			set => hour = value;
+		}
+		public float Minute
+		{
+			get => minute;
+			set => minute = value;
+		}
+		public float Second
+		{
+			get => seconds;
+			set 
+            { 
+                seconds = value; 
+                ResetTime();
+            }
+		}
 
-        private void Update()
+		private void Update()
         {
             time += Time.deltaTime * timeSpeed;
             Refresh();
@@ -32,37 +58,37 @@ namespace RealisticSunMovement
 
         private void Refresh()
         {
-            _hour = (int)(time / (SecondsInMinute * MinutesInHour)) % HoursInDay;
-            _minute = (int)(time / SecondsInMinute) % MinutesInHour;
-            _second = (int)time % SecondsInMinute;
+            hour = (int)(time / (timeSettings.SecondsInMinute * timeSettings.MinutesInHour) % timeSettings.HoursInDay);
+            minute = (int)(time / timeSettings.SecondsInMinute % timeSettings.MinutesInHour);
+            seconds = (int)(time % timeSettings.SecondsInMinute);
         }
 
         private void ResetTime()
         {
-            while (_second < 0)
+            while (seconds < 0)
             {
-                _second += SecondsInMinute;
-                _minute--;
+                seconds += timeSettings.SecondsInMinute;
+                minute--;
             }
-            while (_second >= SecondsInMinute)
+            while (seconds >= timeSettings.SecondsInMinute)
             {
-                _second -= SecondsInMinute;
-                _minute++;
-            }
-
-            while (_minute < 0)
-            {
-                _minute += MinutesInHour;
-                _hour--;
-            }
-            while (_minute >= MinutesInHour)
-            {
-                _minute -= MinutesInHour;
-                _hour++;
+                seconds -= timeSettings.SecondsInMinute;
+                minute++;
             }
 
-            _hour = (_hour + HoursInDay) % HoursInDay;
-            time = (_hour * MinutesInHour + _minute) * SecondsInMinute + _second;
+            while (minute < 0)
+            {
+                minute += timeSettings.MinutesInHour;
+                hour--;
+            }
+            while (minute >= timeSettings.MinutesInHour)
+            {
+                minute -= timeSettings.MinutesInHour;
+                hour++;
+            }
+
+            hour = (hour + timeSettings.HoursInDay) % timeSettings.HoursInDay;
+            time = (hour * timeSettings.MinutesInHour + minute) * timeSettings.SecondsInMinute + seconds;
         }
 
         public float GetTime()
