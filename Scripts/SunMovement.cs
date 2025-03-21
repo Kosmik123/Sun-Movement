@@ -7,14 +7,10 @@ namespace RealisticSunMovement
 	{
 		private const float FullAngle = 360;
 		private const int XAngleAtZenith = 90;
-
-		[Header("Settings")]
-		[SerializeField]
-		private TimeSettings timeSettings;
+		
 		[SerializeField]
 		private PlanetSettings planetSettings;
 
-		[Header("Properties")]
 		[SerializeField]
 		private Clock clock;
 
@@ -32,7 +28,7 @@ namespace RealisticSunMovement
 
 		private void CalculateRotation()
 		{
-			if (timeSettings == null || planetSettings == null)
+			if (clock == null || planetSettings == null)
 				return;
 
 			float latitudeOfZenith = planetSettings.AxialTilt * GetTiltAmountFromYearProgress(clock.YearProgress);
@@ -44,7 +40,6 @@ namespace RealisticSunMovement
 			float yearAngle = clock.YearProgress * FullAngle - 180;
 
 			float dayAngle = FullAngle * clock.DayProgress + 180;
-
 
 			transform.rotation =
 				Quaternion.AngleAxis(dayAngle - yearAngle, polesAxis) *

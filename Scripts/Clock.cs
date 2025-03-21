@@ -51,46 +51,12 @@ namespace RealisticSunMovement
 			}
 		}
 
-		private float rawTime;
+		private float rawSeconds;
         private float dayCount;
 
 		private void Update()
         {
-			rawTime += Time.deltaTime * timeSpeed;
-            Refresh();
+			rawSeconds += Time.deltaTime * timeSpeed;
         }
-
-        private void Refresh()
-        {
-
-        }
-
-        //private void ResetTime()
-        //{
-        //    while (seconds < 0)
-        //    {
-        //        seconds += timeSettings.SecondsInMinute;
-        //        minute--;
-        //    }
-        //    while (seconds >= timeSettings.SecondsInMinute)
-        //    {
-        //        seconds -= timeSettings.SecondsInMinute;
-        //        minute++;
-        //    }
-
-        //    while (minute < 0)
-        //    {
-        //        minute += timeSettings.MinutesInHour;
-        //        hour--;
-        //    }
-        //    while (minute >= timeSettings.MinutesInHour)
-        //    {
-        //        minute -= timeSettings.MinutesInHour;
-        //        hour++;
-        //    }
-
-        //    hour = (hour + timeSettings.HoursInDay) % timeSettings.HoursInDay;
-        //    time = (hour * timeSettings.MinutesInHour + minute) * timeSettings.SecondsInMinute + seconds;
-        //}
     }
 }
