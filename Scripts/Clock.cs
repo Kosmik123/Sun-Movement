@@ -2,31 +2,9 @@
 
 namespace RealisticSunMovement
 {
-	public class Clock : MonoBehaviour
+	[System.Serializable]
+	public class Clock
     {
-        [Header("Settings")]
-        [SerializeField]
-        private float timeSpeed = 1;
-        public float TimeSpeed
-        {
-            get => timeSpeed;
-            set
-            {
-                timeSpeed = value;
-            }
-        }
-
-        [SerializeField]
-        private TimeSettings timeSettings;
-        public TimeSettings TimeSettings
-        {
-            get => timeSettings;
-            set
-            {
-                timeSettings = value;
-            }
-        }
-
 		[SerializeField, Range(0, 1)]
         [Tooltip("Winter solstice: 0 and 1\nSpring equinox: 0.25\nSummer solstice: 0.5\nAutumn equinox: 0.75\n")]
 		private float yearProgress = 0.5f;
@@ -50,13 +28,5 @@ namespace RealisticSunMovement
                 dayProgress = Mathf.Clamp01(value);
 			}
 		}
-
-		private float rawSeconds;
-        private float dayCount;
-
-		private void Update()
-        {
-			rawSeconds += Time.deltaTime * timeSpeed;
-        }
     }
 }

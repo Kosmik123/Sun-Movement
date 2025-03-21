@@ -10,9 +10,14 @@ namespace RealisticSunMovement
 		
 		[SerializeField]
 		private PlanetSettings planetSettings;
-
+		
 		[SerializeField]
 		private Clock clock;
+		public Clock Clock
+		{
+			get => clock;
+			set => clock = value;
+		}
 
 		[SerializeField, Range(-90, 90)]
 		[Tooltip("Positive is north, negative is south")]
