@@ -3,76 +3,76 @@ using UnityEngine;
 
 namespace RealisticSunMovement
 {
-    [CreateAssetMenu(menuName = "Realistic Sun Movement/Planet Settings")]
-    public class PlanetSettings : ScriptableObject
-    {
-        public const float EarthAxialTilt = 23.4f;
+	public class SunMovement : MonoBehaviour
+	{
+		private const float FullAngle = 360;
+		private const int XAngleAtZenith = 90;
 
-		[field: SerializeField, Range(-180, 180)]
-		public float AxialTilt { get; set; } = EarthAxialTilt;
-	}
+		[Header("Settings")]
+		[SerializeField]
+		private TimeSettings timeSettings;
+		[SerializeField]
+		private PlanetSettings planetSettings;
 
-    public class SunMovement : MonoBehaviour
-    {
-        public Clock clock;
-        [SerializeField]
-        private TimeSettings timeSettings;
-        [SerializeField]
-        private PlanetSettings planetSettings;
+		[Header("Properties")]
+		[SerializeField]
+		private Clock clock;
 
 		[SerializeField, Range(-90, 90)]
-        private float latitude = 50;
-		public float Latitude 
-        { 
-            get => latitude; 
-            set => latitude = value; 
-        }
-
-        [Header("Time Settings")]
-        [SerializeField, Range(1, 12)]
-        private float month = 6;
-        public float Month
+		[Tooltip("Positive is north, negative is south")]
+		private float latitude = 50;
+		public float Latitude
 		{
-			get => month;
-			set => month = value;
+			get => latitude;
+			set => latitude = Mathf.Clamp(value, -90, 90);
 		}
 
-        [SerializeField]
-        private Vector3 orbitAxis;
-        [SerializeField]
-        private Vector3 polesAxis;
-        [SerializeField]
-        private float time;
+		private Vector3 orbitAxis;
+		private Vector3 polesAxis;
 
-        private void CalculateRotation()
-        {
-            float yearAngle = month * 30 - 180;
-            float sunAngleForLatitude = 90 - latitude;
-            float tiltedAngle = sunAngleForLatitude + planetSettings.AxialTilt;
-            float dayAngle = 360 * time / (timeSettings.SecondsInMinute * timeSettings.MinutesInHour * timeSettings.HoursInDay) + 180;
+		private void CalculateRotation()
+		{
+			if (timeSettings == null || planetSettings == null)
+				return;
 
-            orbitAxis = Quaternion.AngleAxis(tiltedAngle, Vector3.right) * Vector3.up;
-            polesAxis = Quaternion.AngleAxis(sunAngleForLatitude, Vector3.right) * Vector3.up;
+			float latitudeOfZenith = planetSettings.AxialTilt * GetTiltAmountFromYearProgress(clock.YearProgress);
+			float sunHeightAtNoon = XAngleAtZenith - latitude + latitudeOfZenith;
 
-            transform.rotation =
-                Quaternion.AngleAxis(dayAngle - yearAngle, polesAxis) *
-                Quaternion.AngleAxis(yearAngle, orbitAxis) *
-                Quaternion.AngleAxis(tiltedAngle, Vector3.right);
-        }
+			polesAxis = Quaternion.AngleAxis(-latitude, Vector3.right) * Vector3.forward;
+			orbitAxis = Quaternion.AngleAxis(sunHeightAtNoon, Vector3.right) * Vector3.up;
+
+			float yearAngle = clock.YearProgress * FullAngle - 180;
+
+			float dayAngle = FullAngle * clock.DayProgress + 180;
+
+
+			transform.rotation =
+				Quaternion.AngleAxis(dayAngle - yearAngle, polesAxis) *
+				Quaternion.AngleAxis(yearAngle, orbitAxis) *
+				Quaternion.AngleAxis(sunHeightAtNoon, Vector3.right);
+		}
+
+		private static float GetTiltAmountFromYearProgress(float yearProgress) => -Mathf.Cos(yearProgress * 2 * Mathf.PI);
+
+
+		private void Update()
+		{
+			CalculateRotation();
+		}
 
 		private void OnValidate()
 		{
-            CalculateRotation();
+			CalculateRotation();
 		}
 
 		private void OnDrawGizmosSelected()
 		{
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position - orbitAxis, transform.position + orbitAxis);
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(transform.position, transform.position + polesAxis);
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, transform.position - polesAxis);
+			Gizmos.color = Color.yellow;
+			Gizmos.DrawLine(transform.position - orbitAxis, transform.position + orbitAxis);
+			Gizmos.color = Color.blue;
+			Gizmos.DrawLine(transform.position, transform.position + polesAxis);
+			Gizmos.color = Color.red;
+			Gizmos.DrawLine(transform.position, transform.position - polesAxis);
 		}
 	}
 }
